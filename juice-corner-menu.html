@@ -1,0 +1,633 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>The Juice Corner — Digital Menu</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Bricolage+Grotesque:opsz,wght@12..96,400..800&family=Inter:wght@400;500;600&family=JetBrains+Mono:wght@400;500;600&display=swap" rel="stylesheet">
+<style>
+  :root{
+    --bg: #170D11;
+    --bg-card: #211119;
+    --bg-card-hover: #2A1620;
+    --cream: #F7EFE6;
+    --muted: #B9A79E;
+    --line: rgba(247,239,230,0.10);
+
+    --c-fruit: #FF7A33;
+    --c-seasonal: #A8C93A;
+    --c-shake: #F2668B;
+    --c-coffee: #C08A4E;
+    --c-dryfruit: #E8B84B;
+    --c-lite: #4FC3E0;
+    --c-icecream: #E7B8E0;
+
+    --spectrum: linear-gradient(90deg, var(--c-fruit), var(--c-seasonal), var(--c-shake), var(--c-coffee), var(--c-dryfruit), var(--c-lite), var(--c-icecream));
+  }
+
+  *{ box-sizing: border-box; margin:0; padding:0; }
+
+  html{ scroll-behavior: smooth; }
+
+  body{
+    background: var(--bg);
+    color: var(--cream);
+    font-family: 'Inter', sans-serif;
+    -webkit-font-smoothing: antialiased;
+    padding-bottom: 80px;
+  }
+
+  ::selection{ background: var(--c-fruit); color: #170D11; }
+
+  .spectrum-bar{
+    height: 6px;
+    width: 100%;
+    background: var(--spectrum);
+  }
+
+  /* ---------- HERO ---------- */
+  .hero{
+    padding: 56px 24px 40px;
+    text-align: center;
+    position: relative;
+    overflow: hidden;
+  }
+
+  .hero::before{
+    content: "";
+    position: absolute;
+    top: -120px; left: 50%;
+    width: 480px; height: 480px;
+    transform: translateX(-50%);
+    background: radial-gradient(circle, rgba(255,122,51,0.18), transparent 65%);
+    pointer-events: none;
+  }
+
+  .eyebrow{
+    font-family: 'JetBrains Mono', monospace;
+    font-size: 12px;
+    letter-spacing: 0.18em;
+    text-transform: uppercase;
+    color: var(--muted);
+    margin-bottom: 18px;
+    display: inline-flex;
+    align-items: center;
+    gap: 10px;
+  }
+
+  .eyebrow::before, .eyebrow::after{
+    content: "";
+    width: 24px; height: 1px;
+    background: var(--muted);
+  }
+
+  .hero h1{
+    font-family: 'Bricolage Grotesque', sans-serif;
+    font-weight: 800;
+    font-size: clamp(40px, 10vw, 76px);
+    line-height: 0.98;
+    letter-spacing: -0.02em;
+    background: var(--spectrum);
+    -webkit-background-clip: text;
+    background-clip: text;
+    -webkit-text-fill-color: transparent;
+  }
+
+  .hero p.tagline{
+    margin-top: 18px;
+    color: var(--muted);
+    font-size: 16px;
+    max-width: 420px;
+    margin-left: auto;
+    margin-right: auto;
+  }
+
+  .hero .note{
+    margin-top: 22px;
+    font-family: 'JetBrains Mono', monospace;
+    font-size: 11px;
+    color: var(--muted);
+    letter-spacing: 0.04em;
+  }
+
+  /* ---------- STICKY NAV ---------- */
+  .navwrap{
+    position: sticky;
+    top: 0;
+    z-index: 50;
+    background: rgba(23,13,17,0.92);
+    backdrop-filter: blur(10px);
+    border-bottom: 1px solid var(--line);
+  }
+
+  nav{
+    display: flex;
+    gap: 8px;
+    overflow-x: auto;
+    padding: 14px 20px;
+    scrollbar-width: none;
+  }
+  nav::-webkit-scrollbar{ display:none; }
+
+  nav button{
+    flex: none;
+    font-family: 'JetBrains Mono', monospace;
+    font-size: 12px;
+    letter-spacing: 0.03em;
+    text-transform: uppercase;
+    background: transparent;
+    border: 1px solid var(--line);
+    color: var(--muted);
+    padding: 9px 16px;
+    border-radius: 100px;
+    cursor: pointer;
+    transition: all 0.25s ease;
+    white-space: nowrap;
+  }
+
+  nav button .dot{
+    display: inline-block;
+    width: 7px; height: 7px;
+    border-radius: 50%;
+    margin-right: 8px;
+    vertical-align: middle;
+  }
+
+  nav button.active{
+    color: var(--bg);
+    border-color: transparent;
+  }
+
+  /* ---------- MENU SECTIONS ---------- */
+  main{
+    max-width: 720px;
+    margin: 0 auto;
+    padding: 0 20px;
+  }
+
+  section.category{
+    padding-top: 56px;
+    scroll-margin-top: 76px;
+  }
+
+  .cat-head{
+    display: flex;
+    align-items: baseline;
+    justify-content: space-between;
+    border-bottom: 2px solid var(--line);
+    padding-bottom: 14px;
+    margin-bottom: 8px;
+  }
+
+  .cat-head h2{
+    font-family: 'Bricolage Grotesque', sans-serif;
+    font-weight: 700;
+    font-size: clamp(26px, 6vw, 34px);
+    letter-spacing: -0.01em;
+  }
+
+  .cat-head .count{
+    font-family: 'JetBrains Mono', monospace;
+    font-size: 12px;
+    color: var(--muted);
+    white-space: nowrap;
+    margin-left: 12px;
+  }
+
+  .col-labels{
+    display: flex;
+    justify-content: flex-end;
+    gap: 0;
+    font-family: 'JetBrains Mono', monospace;
+    font-size: 10px;
+    letter-spacing: 0.08em;
+    text-transform: uppercase;
+    color: var(--muted);
+    padding: 14px 0 6px;
+  }
+  .col-labels span{ width: 58px; text-align: right; }
+  .col-labels span.single{ width: 66px; }
+
+  .item{
+    display: flex;
+    align-items: baseline;
+    justify-content: space-between;
+    padding: 13px 0;
+    border-bottom: 1px solid var(--line);
+  }
+
+  .item .name{
+    font-size: 15.5px;
+    font-weight: 500;
+    flex: 1;
+    padding-right: 12px;
+    position: relative;
+  }
+
+  .item .prices{
+    display: flex;
+    gap: 0;
+    font-family: 'JetBrains Mono', monospace;
+    font-size: 13.5px;
+    color: var(--cream);
+    font-variant-numeric: tabular-nums;
+  }
+
+  .item .prices span{ width: 58px; text-align: right; }
+  .item .prices span.single{ width: 66px; }
+  .item .prices span.dim{ color: var(--muted); }
+
+  /* ---------- SIGNATURE ITEM PHOTO MOUNT ---------- */
+  .item.signature{
+    padding: 16px 0 20px;
+  }
+
+  .item.signature .name-wrap{
+    display: flex;
+    align-items: center;
+    gap: 14px;
+    flex: 1;
+    min-width: 0;
+  }
+
+  .photo-mount{
+    flex: none;
+    width: 52px;
+    height: 62px;
+    padding: 4px 4px 9px;
+    background:
+      radial-gradient(circle at 20% 15%, rgba(255,255,255,0.35), transparent 40%),
+      linear-gradient(155deg, #FBF3E7 0%, #ECDFCC 100%);
+    background-blend-mode: overlay, normal;
+    border-radius: 2px;
+    box-shadow:
+      0 10px 18px -6px rgba(0,0,0,0.55),
+      0 1px 0 rgba(255,255,255,0.08) inset;
+    transform: rotate(-4deg);
+    position: relative;
+  }
+
+  .photo-mount::before{
+    /* washi tape */
+    content: "";
+    position: absolute;
+    top: -7px;
+    left: 50%;
+    width: 26px;
+    height: 14px;
+    background: rgba(247,239,230,0.28);
+    border: 1px solid rgba(247,239,230,0.15);
+    transform: translateX(-50%) rotate(3deg);
+    backdrop-filter: blur(1px);
+  }
+
+  .photo-mount .frame{
+    width: 100%;
+    height: 100%;
+    border-radius: 1px;
+    overflow: hidden;
+    background:
+      repeating-linear-gradient(45deg, #d8cdbb 0, #d8cdbb 2px, #cfc3ae 2px, #cfc3ae 4px);
+    display: flex;
+    align-items: center;
+    justify-content: center;
+  }
+
+  .photo-mount .frame img{
+    width: 100%;
+    height: 100%;
+    object-fit: cover;
+    display: block;
+  }
+
+  .photo-mount .frame.empty-slot{
+    color: #8a7a63;
+    font-family: 'JetBrains Mono', monospace;
+    font-size: 9px;
+    text-align: center;
+    line-height: 1.3;
+    letter-spacing: 0.02em;
+    padding: 2px;
+  }
+
+  .item.signature .name{
+    font-weight: 600;
+  }
+
+  .item.signature .name .signature-tag{
+    display: block;
+    font-family: 'JetBrains Mono', monospace;
+    font-size: 9.5px;
+    letter-spacing: 0.1em;
+    text-transform: uppercase;
+    color: var(--muted);
+    font-weight: 500;
+    margin-bottom: 3px;
+  }
+
+  /* ---------- FOOTER ---------- */
+  footer{
+    max-width: 720px;
+    margin: 72px auto 0;
+    padding: 32px 20px 0;
+    border-top: 1px solid var(--line);
+    text-align: center;
+  }
+
+  footer p{
+    font-family: 'JetBrains Mono', monospace;
+    font-size: 11px;
+    color: var(--muted);
+    letter-spacing: 0.05em;
+  }
+
+  .fade-in{
+    opacity: 0;
+    transform: translateY(14px);
+    transition: opacity 0.6s ease, transform 0.6s ease;
+  }
+  .fade-in.visible{
+    opacity: 1;
+    transform: translateY(0);
+  }
+
+  @media (prefers-reduced-motion: reduce){
+    html{ scroll-behavior: auto; }
+    .fade-in{ opacity: 1; transform: none; transition: none; }
+  }
+</style>
+</head>
+<body>
+
+  <div class="spectrum-bar"></div>
+
+  <div class="hero">
+    <div class="eyebrow">Scan · Sip · Repeat</div>
+    <h1>THE JUICE<br>CORNER</h1>
+    <p class="tagline">Cold-pressed juices, hand-blended shakes &amp; faloodas — made fresh the moment you order.</p>
+    <p class="note">ALL PRICES IN ₹ · S / M / L</p>
+  </div>
+
+  <div class="navwrap">
+    <nav id="catnav"></nav>
+  </div>
+
+  <main id="menu"></main>
+
+  <footer>
+    <p>THE JUICE CORNER &nbsp;·&nbsp; MENU UPDATED JULY 2026</p>
+  </footer>
+
+<script>
+const DATA = [
+  {
+    id: "fruit-juice",
+    name: "Fruit Juice",
+    color: "var(--c-fruit)",
+    sizes: ["S","M","L"],
+    items: [
+      ["Pineapple", 40, 60, 100],
+      ["Watermelon", 40, 60, 100],
+      ["Sweet Lime (Mosambi)", 50, 70, 120],
+      ["Mosambi Pineapple", 50, 70, 120],
+      ["Mix Fruit", 60, 90, 150],
+      ["Anar Mosambi Mix", 100, 150, 250],
+      ["Anar Pineapple", 100, 150, 250],
+      ["Anar (Pomegranate)", 120, 170, 300],
+    ]
+  },
+  {
+    id: "seasonal-juice",
+    name: "Seasonal Juice",
+    color: "var(--c-seasonal)",
+    sizes: ["S","M","L"],
+    items: [
+      ["Carrot Mix Veg.", 30, 50, 80],
+      ["Beal", 50, 50, 80],
+      ["Orange", 50, 70, 120],
+      ["Orange Mosambi", 50, 70, 120],
+      ["Orange Pineapple", 60, 90, 150],
+      ["Aloo Bukhara", 60, 90, 150],
+      ["Falsa", 70, 100, 150],
+      ["Apple", 90, 100, 150],
+      ["Grapes", 90, 130, 220],
+      ["Orange Anar Mix", 100, 150, 250],
+      ["Angoor + Anar Mix", 120, 170, 300],
+    ]
+  },
+  {
+    id: "shake",
+    name: "With Ice Cream Shake",
+    color: "var(--c-shake)",
+    sizes: ["S","M","L"],
+    items: [
+      ["Papaya Shake", 50, 70, 120],
+      ["Banana Shake", 50, 70, 120],
+      ["Mango Shake", 70, 100, 170],
+      ["Chikoo Shake", 60, 90, 150],
+      ["Mirinda Shake", 60, 90, 150],
+      ["Thandai Shake", 60, 90, 150],
+      ["Khus Shake", 60, 90, 150],
+      ["Rose Shake", 60, 90, 150],
+      ["Vanilla Shake", 60, 90, 150],
+      ["Strawberry Shake", 60, 90, 150],
+      ["Pineapple Shake", 60, 90, 150],
+      ["Rose Gulkand Shake", 70, 120, 150],
+      ["Butter Scotch", 80, 120, 200],
+      ["Kiwi Shake", 80, 120, 200],
+      ["Black Current", 80, 120, 200],
+      ["Paan Shake", 80, 120, 200],
+      ["Falooda Shake", 80, 120, 200],
+      ["Bubble Gum Shake", 80, 120, 200],
+      ["Blue Berry Shake", 80, 120, 200],
+    ]
+  },
+  {
+    id: "coffee-choco",
+    name: "Coffee &amp; Chocolate Flavour",
+    color: "var(--c-coffee)",
+    sizes: ["S","M","L"],
+    items: [
+      ["Banana Oreo", 70, 90, 150],
+      ["Banana Chocolate", 80, 120, 200],
+      ["Chocolate", 80, 120, 200],
+      ["Cold Coffee", 80, 120, 200],
+      ["Choco Almond", 80, 120, 200],
+      ["Oreo Chocolate", 80, 120, 200],
+      ["Coffee Oreo Crunch", 100, 150, 250],
+      ["Kit Kat Shake", 100, 150, 250],
+      ["Coffee Almond Crunch", 100, 150, 250],
+      ["Coffee Kit Kat Crunch", 100, 150, 250],
+      ["Oreo Kit Kat Crunch", 100, 150, 250],
+      ["Oreo Strawberry Crunch", 100, 150, 250],
+      ["Oreo Blueberry Crunch", 100, 150, 250],
+    ]
+  },
+  {
+    id: "dry-fruit",
+    name: "Dry Fruit Shake",
+    color: "var(--c-dryfruit)",
+    sizes: ["S","M","L"],
+    items: [
+      ["Banana Khajur Dry Fruit", 80, 120, 200],
+      ["Mango Kaju", 80, 120, 200],
+      ["Taj Mahal Badam", 100, 150, 250],
+      ["Falooda Dry Fruit", 120, 180, 300],
+      ["Paan Kaju", 120, 180, 300],
+      ["Kesar Pista Shake", 120, 180, 300],
+      ["Kesar Kaju", 120, 180, 300],
+      ["Kaju Anjeer", 120, 180, 300],
+      ["Khajur Dry Fruit Shake", 120, 180, 300],
+    ]
+  },
+  {
+    id: "lite",
+    name: "Lite Drinks",
+    color: "var(--c-lite)",
+    sizes: ["S","M","L"],
+    items: [
+      ["Masala Cola", 30, 60, 80],
+      ["Fresh Lemon", 40, 80, 100],
+      ["Mojito Virgin", 40, 60, 100],
+      ["Red Bull Mocktail", 40, 60, 100],
+      ["Blue Lagoon", 40, 60, 100],
+    ]
+  },
+  {
+    id: "ice-cream",
+    name: "Ice Cream",
+    color: "var(--c-icecream)",
+    sizes: ["Price"],
+    single: true,
+    items: [
+      ["Vanilla Cup", 40],
+      ["Butter Scotch", 40],
+      ["Shahi Gulab", 40],
+      ["Kesar Mango", 50],
+      ["Paan", 50],
+    ]
+  }
+];
+
+// One signature/bestseller item per category gets a mounted photo.
+// To add a real photo: drop the file into a "photos" folder next to this HTML
+// file, named exactly as the "photoId" below (e.g. photos/anar-pomegranate.jpg),
+// and it will appear automatically — no code changes needed.
+const SIGNATURES = {
+  "fruit-juice":   { name: "Anar (Pomegranate)",   photoId: "photos/anar-pomegranate.jpg" },
+  "seasonal-juice":{ name: "Orange",                photoId: "photos/orange.jpg" },
+  "shake":         { name: "Mango Shake",           photoId: "photos/mango-shake.jpg" },
+  "coffee-choco":  { name: "Cold Coffee",           photoId: "photos/cold-coffee.jpg" },
+  "dry-fruit":     { name: "Kesar Pista Shake",     photoId: "photos/kesar-pista-shake.jpg" },
+  "lite":          { name: "Blue Lagoon",           photoId: "photos/blue-lagoon.jpg" },
+  "ice-cream":     { name: "Kesar Mango",           photoId: "photos/kesar-mango.jpg" },
+};
+
+const nav = document.getElementById('catnav');
+const menu = document.getElementById('menu');
+
+DATA.forEach(cat => {
+  // Nav pill
+  const btn = document.createElement('button');
+  btn.dataset.target = cat.id;
+  btn.innerHTML = `<span class="dot" style="background:${cat.color}"></span>${cat.name.replace('&amp;','&')}`;
+  btn.addEventListener('click', () => {
+    document.getElementById(cat.id).scrollIntoView({behavior:'smooth'});
+  });
+  nav.appendChild(btn);
+
+  // Section
+  const section = document.createElement('section');
+  section.className = 'category fade-in';
+  section.id = cat.id;
+
+  const colLabels = cat.single
+    ? `<span class="single">₹</span>`
+    : `<span>S</span><span>M</span><span>L</span>`;
+
+  const sig = SIGNATURES[cat.id];
+
+  const itemsHTML = cat.items.map(row => {
+    const [name, ...prices] = row;
+    const priceHTML = cat.single
+      ? `<span class="single">₹${prices[0]}</span>`
+      : prices.map(p => `<span>₹${p}</span>`).join('');
+
+    const isSignature = sig && sig.name === name;
+
+    if(isSignature){
+      return `
+        <div class="item signature">
+          <div class="name-wrap">
+            <div class="photo-mount">
+              <div class="frame" data-photo="${sig.photoId}">
+                <span class="empty-slot">PHOTO<br>PENDING</span>
+              </div>
+            </div>
+            <div class="name"><span class="signature-tag">Bestseller</span>${name}</div>
+          </div>
+          <div class="prices">${priceHTML}</div>
+        </div>`;
+    }
+
+    return `<div class="item"><div class="name">${name}</div><div class="prices">${priceHTML}</div></div>`;
+  }).join('');
+
+  section.innerHTML = `
+    <div class="cat-head">
+      <h2 style="color:${cat.color}">${cat.name}</h2>
+      <span class="count">${cat.items.length} flavours</span>
+    </div>
+    <div class="col-labels">${colLabels}</div>
+    ${itemsHTML}
+  `;
+  menu.appendChild(section);
+});
+
+// Auto-load signature photos if present; otherwise keep the "photo pending" slot.
+document.querySelectorAll('.frame[data-photo]').forEach(frame => {
+  const src = frame.dataset.photo;
+  const img = new Image();
+  img.onload = () => { frame.innerHTML = ''; frame.classList.remove('empty-slot'); const el = document.createElement('img'); el.src = src; el.alt = ''; frame.appendChild(el); };
+  img.onerror = () => { /* leave placeholder as-is */ };
+  img.src = src;
+});
+
+// Active nav highlight on scroll
+const sections = document.querySelectorAll('section.category');
+const navButtons = document.querySelectorAll('#catnav button');
+
+const observer = new IntersectionObserver((entries) => {
+  entries.forEach(entry => {
+    const id = entry.target.id;
+    const btn = document.querySelector(`#catnav button[data-target="${id}"]`);
+    if(entry.isIntersecting){
+      navButtons.forEach(b => {
+        b.classList.remove('active');
+        b.style.background = 'transparent';
+        b.style.borderColor = 'var(--line)';
+      });
+      const cat = DATA.find(c => c.id === id);
+      btn.classList.add('active');
+      btn.style.background = cat.color;
+      btn.style.borderColor = cat.color;
+      btn.scrollIntoView({behavior:'smooth', inline:'center', block:'nearest'});
+    }
+    entry.target.classList.toggle('visible', entry.isIntersecting || entry.boundingClientRect.top < 0);
+  });
+}, { rootMargin: '-40% 0px -50% 0px', threshold: 0 });
+
+sections.forEach(s => observer.observe(s));
+
+// Fade-in on first view
+const fadeObserver = new IntersectionObserver((entries) => {
+  entries.forEach(entry => {
+    if(entry.isIntersecting) entry.target.classList.add('visible');
+  });
+}, { threshold: 0.05 });
+sections.forEach(s => fadeObserver.observe(s));
+</script>
+</body>
+</html>
